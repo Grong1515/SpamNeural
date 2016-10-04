@@ -1,3 +1,5 @@
 venv/
 .idea/
 learn/
+__pycahsh__
+*.pyc
