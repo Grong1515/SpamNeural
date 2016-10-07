@@ -44,15 +44,9 @@ if __name__ == '__main__':
     if os.path.exists(RESULTS_PATH + classifier_name):
         classifier.load(RESULTS_PATH + classifier_name)
     else:
-        k = 10
-
-        for i in range(10):
-
-            classifier.fit(train_set[0], (train_set[1] == 1).astype(numpy.float), 0.0001, 100)
+        classifier.fit(train_set[0], (train_set[1] == 1).astype(numpy.float), 0.0001, 100)
         classifier.save(RESULTS_PATH + classifier_name)
     n_test_samples = test_set[1].shape[0]
     results = classifier.predict(test_set[0])
-    print(results)
-    print(test_set[1])
     n_errors = numpy.sum(results != test_set[1])
     print('Errors on test set: {0:%}'.format(float(n_errors) / float(n_test_samples)))
