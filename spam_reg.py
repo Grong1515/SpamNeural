@@ -15,14 +15,18 @@ def load_data():
 
 
     # print(data_array)
-    prop_array = []
     answer_array = []
 
     for vector in data_array:
         answer_array.append(vector.pop(-1))
-        prop_array.append(vector)
 
-    split = 3000
+    mean = numpy.mean(data_array, 0)
+    std = numpy.std(data_array, 0)
+
+    data_array -= mean
+    data_array /= std
+
+    split = 2000
     X_train = numpy.array(data_array[:split])
     y_train = numpy.array(answer_array[:split])
 
@@ -35,19 +39,20 @@ if __name__ == '__main__':
     import os.path
     train_set, test_set = load_data()
     print(train_set[1].sum())
-    classifiers = list()
     classifier_name = 'log_reg_for_spam_1.txt'
-    new_classifier = LogisticRegression()
+    classifier = LogisticRegression()
     if os.path.exists(RESULTS_PATH + classifier_name):
-        new_classifier.load(RESULTS_PATH + classifier_name)
+        classifier.load(RESULTS_PATH + classifier_name)
     else:
-        new_classifier.fit(train_set[0], (train_set[1] == 1).astype(numpy.float), 0.00001, 100000.)
-        new_classifier.save(RESULTS_PATH + classifier_name)
-    classifiers.append(new_classifier)
+        k = 10
+
+        for i in range(10):
+
+            classifier.fit(train_set[0], (train_set[1] == 1).astype(numpy.float), 0.0001, 100)
+        classifier.save(RESULTS_PATH + classifier_name)
     n_test_samples = test_set[1].shape[0]
-    results = classifiers[0].predict(test_set[0])
+    results = classifier.predict(test_set[0])
     print(results)
     print(test_set[1])
-    # сравниваем полученные результаты с эталонными и оцениваем процент ошибок коллектива логистических регрессий
     n_errors = numpy.sum(results != test_set[1])
     print('Errors on test set: {0:%}'.format(float(n_errors) / float(n_test_samples)))
