@@ -30,8 +30,8 @@ def load_data(cross_valid_parts_count, split=3000):
     learn_parts = []
     answer_parts = []
     for i in range(cross_valid_parts_count):
-        learn_parts.append(data_array[cross_valid_parts_count*i:cross_valid_parts_count*(i+1)])
-        answer_parts.append(answer_array[cross_valid_parts_count*i:cross_valid_parts_count*(i+1)])
+        learn_parts.append(data_array[one_part*i:one_part*(i+1)])
+        answer_parts.append(answer_array[one_part*i:one_part*(i+1)])
 
     X_train = numpy.array(learn_parts)
     y_train = numpy.array(answer_parts)
@@ -59,8 +59,8 @@ if __name__ == '__main__':
         for i in range(k):
             for j in range(k):
                 if j != i:
-                    classifier.fit(train_set[0][j], (train_set[1][j] == 1).astype(numpy.float), 0.0001, 100, 400)
-            # print(check(classifier.predict(test_set[0][i]), test_set[1][i]))
+                    classifier.fit(train_set[0][j], (train_set[1][j] == 1).astype(numpy.float), 0.0001, 100, 100)
+            print(check(classifier.predict(test_set[0][i]), test_set[1][i]))
         classifier.save(RESULTS_PATH + classifier_name)
     n_test_samples = test_set[1].shape[0]
     results = classifier.predict(test_set[0])
