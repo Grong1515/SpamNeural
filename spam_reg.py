@@ -1,4 +1,5 @@
 from logreg import LogisticRegression, LogRegError
+from sklearn.neural_network import MLPClassifier
 import numpy
 
 
@@ -40,12 +41,8 @@ if __name__ == '__main__':
     train_set, test_set = load_data()
     print(train_set[1].sum())
     classifier_name = 'log_reg_for_spam_1.txt'
-    classifier = LogisticRegression()
-    if os.path.exists(RESULTS_PATH + classifier_name):
-        classifier.load(RESULTS_PATH + classifier_name)
-    else:
-        classifier.fit(train_set[0], (train_set[1] == 1).astype(numpy.float), 0.0001, 100)
-        classifier.save(RESULTS_PATH + classifier_name)
+    classifier = MLPClassifier(hidden_layer_sizes=500)
+    classifier.fit(train_set[0], (train_set[1] == 1).astype(numpy.float))
     n_test_samples = test_set[1].shape[0]
     results = classifier.predict(test_set[0])
     n_errors = numpy.sum(results != test_set[1])
